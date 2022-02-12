@@ -1,4 +1,4 @@
-# ![icon](https://raw.githubusercontent.com/MCOfficer/GibFonts/master/icon.ico) GibFonts
+# <img src="https://raw.githubusercontent.com/MCOfficer/GibFonts/master/gibfonts.ico" width="25"/> GibFonts
 
 A graphical [Nerd Fonts](https://www.nerdfonts.com/) Bulk Installer.
 
