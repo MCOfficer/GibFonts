@@ -1,0 +1,27 @@
+name: Build
+on:
+  push:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: hecrj/setup-rust-action@v1
+      - uses: actions/checkout@v2
+      - name: Build binary
+        run: cargo build --verbose --release
+      - name: Strip binary
+        run: strip target/release/gibfonts.exe
+      - name: Archive binary
+        uses: actions/upload-artifact@v1
+        with:
+          name: gibfonts.exe
+          path: target/release/gibfonts.exe
+      - name: Release binary
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            target/release/gibfonts.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
