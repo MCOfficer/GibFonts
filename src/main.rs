@@ -154,7 +154,7 @@ impl App {
 
                     let assets = assets
                         .drain(..)
-                        .filter(|a| a.name.ends_with(".zip"))
+                        .filter(|a| a.is_supported())
                         .enumerate()
                         .map(|(i, asset)| {
                             let mut checkbox = Default::default();

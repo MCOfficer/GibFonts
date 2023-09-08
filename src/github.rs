@@ -1,15 +1,15 @@
 use crate::ProgressEvent;
-use anyhow::Result;
+use anyhow::{Context, Result};
 use log::{debug, info};
 use nwg::NoticeSender;
 use progress_streams::ProgressReader;
 use serde::Deserialize;
-use std::io::{BufReader, Cursor};
+use std::io::BufReader;
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::mpsc::Sender;
 use std::time::Duration;
-use tempfile::tempdir;
+use xz2::read::XzDecoder;
 
 #[derive(Deserialize, Debug)]
 pub struct Release {
@@ -26,9 +26,13 @@ pub struct ReleaseAsset {
 impl ReleaseAsset {
     pub fn display_name(&self) -> String {
         self.name
-            .strip_suffix(".zip")
+            .strip_suffix(".tar.xz")
             .unwrap_or(&self.name)
             .to_string()
+    }
+
+    pub fn is_supported(&self) -> bool {
+        self.name.ends_with(".tar.xz")
     }
 
     pub fn download(
@@ -79,27 +83,25 @@ impl ReleaseAsset {
         notice_sender.notice();
 
         let fonts_dir = PathBuf::from(std::env::var("windir")?).join("Fonts");
-        let temp = tempdir()?;
-        info!("Extracting to {}", temp.path().to_string_lossy());
-        zip_extract::extract(Cursor::new(zip), temp.path(), true)?;
 
-        for entry in std::fs::read_dir(temp.path())?.filter_map(|r| r.ok()) {
-            if entry.file_type()?.is_file()
-                && entry
-                    .path()
-                    .extension()
-                    .map(|e| e.to_string_lossy())
-                    .map(|e| e == "otf" || e == "ttf")
-                    .unwrap_or_default()
-            {
-                let target = fonts_dir.join(entry.file_name());
-                if !target.exists() {
+        let decompressor = XzDecoder::new(zip.as_slice());
+        let mut tar = tar::Archive::new(decompressor);
+
+        for file in tar.entries()? {
+            let mut file = file?;
+            let path = file.path()?;
+            let filename = path
+                .file_name()
+                .with_context(|| "encountered archive entry without filename")?;
+            let target = fonts_dir.join(filename);
+            if let Some(ext) = path.extension() {
+                if ext == "otf" || ext == "ttf" {
                     debug!(
-                        "Moving {} to {}",
-                        entry.path().to_string_lossy(),
+                        "Extracting {} to {}",
+                        filename.to_string_lossy(),
                         target.to_string_lossy()
                     );
-                    std::fs::rename(entry.path(), target)?;
+                    file.unpack(target)?;
                 }
             }
         }
