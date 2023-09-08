@@ -9,5 +9,4 @@ fn main() {
     )
     .expect("cannot embed manifest");
     println!("cargo:rerun-if-changed=build.rs");
-    return;
 }
