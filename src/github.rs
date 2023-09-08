@@ -53,7 +53,7 @@ impl ReleaseAsset {
             sender
                 .send(ProgressEvent::Downloading {
                     name: self.display_name(),
-                    done: done as u32,
+                    done,
                     total: self.size,
                 })
                 .unwrap();

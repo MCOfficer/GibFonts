@@ -15,7 +15,7 @@ use nwg::stretch::{
     style::{Dimension as D, FlexDirection},
 };
 use nwg::{CheckBox, CheckBoxState, Icon, NativeUi, ProgressBarState};
-use simplog::simplog::SimpleLogger;
+use simplog::SimpleLogger;
 
 use crate::github::ReleaseAsset;
 
