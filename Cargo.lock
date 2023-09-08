@@ -205,6 +205,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "embed-manifest"
+version = "1.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "41cd446c890d6bed1d8b53acef5f240069ebef91d6fae7c5f52efe61fe8b5eae"
+
+[[package]]
 name = "errno"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -265,6 +271,7 @@ name = "gibfonts"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "embed-manifest",
  "human_format",
  "log",
  "native-windows-derive",
@@ -275,7 +282,6 @@ dependencies = [
  "simplog",
  "tempfile",
  "ureq",
- "winres",
  "zip-extract",
 ]
 
@@ -1066,15 +1072,6 @@ name = "windows_x86_64_msvc"
 version = "0.48.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed94fce61571a4006852b7389a063ab983c02eb1bb37b47f8272ce92d06d9538"
-
-[[package]]
-name = "winres"
-version = "0.1.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b68db261ef59e9e52806f688020631e987592bd83619edccda9c47d42cde4f6c"
-dependencies = [
- "toml",
-]
 
 [[package]]
 name = "zip"

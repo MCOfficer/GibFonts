@@ -3,8 +3,6 @@ name = "gibfonts"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 anyhow = "1.0"
 human_format = "1.0"
@@ -20,7 +18,7 @@ tempfile = "3.3"
 zip-extract = { version = "0.1", default_features = false, features = ["deflate"] }
 
 [build-dependencies]
-winres = "0.1"
+embed-manifest = "1.4"
 
 [profile.release]
 opt-level = "z"  # Optimize for size.
